@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "71184381103",
+    "firebase_url": "https://wilo-ab9d0.firebaseio.com",
+    "project_id": "wilo-ab9d0",
+    "storage_bucket": "wilo-ab9d0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:71184381103:android:7ccb9cf7587e7d76",
+        "android_client_info": {
+          "package_name": "com.fitpath.wilo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "71184381103-kocqdvvomv2n34k7v6imcdtcpncf6p3k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fitpath.wilo",
+            "certificate_hash": "bfd8d48093006f50e77d944f91de4bc164425ec8"
+          }
+        },
+        {
+          "client_id": "71184381103-dlgg4679ujgaougaoi0qgcackqp0cvdt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCE1oZZFPceuaNVRh1kJQbT1yNgQwRSKEs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "71184381103-dlgg4679ujgaougaoi0qgcackqp0cvdt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
