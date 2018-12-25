@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
-import 'login_page.dart';
+import 'bottom_navigation.dart';
 
-void main(){
-  runApp(new Myapp());
-}
+void main() => runApp(new MyApp());
 
-class Myapp extends StatelessWidget{
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-      title: 'Flutter login demo',
-      theme: new ThemeData(
-        primarySwatch: Colors.blue,
+    return MaterialApp(
+      title: 'Multiple counters',
+      theme: ThemeData(
+        primarySwatch: Colors.orange,
       ),
-      home: new LoginPage()
+      home: BottomNavigation(),
     );
   }
-
 }

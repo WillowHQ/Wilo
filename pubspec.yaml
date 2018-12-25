@@ -1,5 +1,5 @@
 name: flutter_app
-description: A new Flutter application.
+description: A Virtual Habit assistant.
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -23,6 +23,13 @@ dependencies:
   firebase_analytics: ^1.0.4
   firebase_auth: ^0.6.6
   google_sign_in: ^3.0.4
+  scoped_model: 0.3.0
+  cloud_firestore: 0.7.4
+  firebase_database: ^1.0.5
+  redux: 3.0.0
+  flutter_redux: 0.5.2
+
+
 
 dev_dependencies:
   flutter_test:
