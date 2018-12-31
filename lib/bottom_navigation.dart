@@ -7,10 +7,12 @@ import 'package:flutter_app/pages/redux_page.dart';
 import 'package:flutter_app/pages/scoped_models_page.dart';
 import 'package:flutter_app/pages/set_state_page.dart';
 import 'package:flutter_app/pages/streams_page.dart';
+import 'package:flutter_app/pages/reminders_set_state_page.dart';
+
 
 enum TabItem {
   setState,
-  streams,
+  reminders,
 
 }
 
@@ -18,8 +20,8 @@ String tabItemName(TabItem tabItem) {
   switch (tabItem) {
     case TabItem.setState:
       return "setState";
-    case TabItem.streams:
-      return "streams";
+    case TabItem.reminders:
+      return "reminders";
 
   }
   return null;
@@ -39,7 +41,7 @@ class BottomNavigationState extends State<BottomNavigation> {
         _updateCurrentItem(TabItem.setState);
         break;
       case 1:
-        _updateCurrentItem(TabItem.streams);
+        _updateCurrentItem(TabItem.reminders);
         break;
 
     }
@@ -65,8 +67,8 @@ class BottomNavigationState extends State<BottomNavigation> {
     switch (currentItem) {
       case TabItem.setState:
         return SetStatePage(database: database, stream: stream);
-      case TabItem.streams:
-        return StreamsPage(database: database, stream: stream);
+      case TabItem.reminders:
+        return ReminderSetStatePage(database: database, stream: stream);
 
     }
     return Container();
@@ -77,7 +79,8 @@ class BottomNavigationState extends State<BottomNavigation> {
       type: BottomNavigationBarType.fixed,
       items: [
         _buildItem(icon: Icons.adjust, tabItem: TabItem.setState),
-        _buildItem(icon: Icons.clear_all, tabItem: TabItem.streams),
+        _buildItem(icon: Icons.clear_all, tabItem: TabItem.reminders),
+
 
       ],
       onTap: _onSelectTab,
