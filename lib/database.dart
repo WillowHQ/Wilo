@@ -11,6 +11,7 @@ class Reminder {
   Reminder({this.id, this.value});
   int id;
   int value;
+  String prompt;
 }
 
 abstract class Database {
@@ -75,6 +76,11 @@ class AppFirestore implements Database {
 
   Future<void> deleteReminder(Reminder reminder) async {
     _documentReminderReference(reminder).delete();
+  }
+  Future<void> updateReminder(Reminder reminder, String prompt) async {
+    _documentReminderReference(reminder).setData({
+      'prompt': prompt
+    });
   }
 
   Stream<List<Reminder>> remindersStream() {

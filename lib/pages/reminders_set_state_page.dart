@@ -1,30 +1,30 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_app/common_widgets/counter_list_tile.dart';
+import 'package:flutter_app/common_widgets/reminder_list_tile.dart';
 import 'package:flutter_app/common_widgets/list_items_builder.dart';
 import 'package:flutter_app/database.dart';
 
 class ReminderSetStatePage extends StatefulWidget {
   ReminderSetStatePage({this.database, this.stream});
   final Database database;
-  final Stream<List<Cou>> stream;
+  final Stream<List<Reminder>> stream;
 
   @override
   State<StatefulWidget> createState() => ReminderSetStatePageState();
 }
 
 class ReminderSetStatePageState extends State<ReminderSetStatePage> {
-  List<Counter> _counters;
+  List<Reminder> _reminders;
 
   StreamSubscription _subscription;
 
   @override
   void initState() {
     super.initState();
-    _subscription = widget.stream.listen((counters) {
+    _subscription = widget.stream.listen((reminders) {
       setState(() {
-        _counters = counters;
+        _reminders = reminders;
       });
     });
   }
@@ -35,46 +35,50 @@ class ReminderSetStatePageState extends State<ReminderSetStatePage> {
     _subscription.cancel();
   }
 
-  void _createCounter() async {
-    await widget.database.createCounter();
+  void _createReminder() async {
+    await widget.database.createReminder();
   }
 
-  void _increment(Counter counter) async {
-    counter.value++;
-    await widget.database.setCounter(counter);
+  void _increment(Reminder reminder) async {
+    reminder.value++;
+    await widget.database.setReminder(reminder);
   }
 
-  void _decrement(Counter counter) async {
-    counter.value--;
-    await widget.database.setCounter(counter);
+  void _updatePrompt(Reminder reminder, String prompt) async {
+    reminder.prompt = prompt;
+
+  }
+  void _decrement(Reminder reminder) async {
+    reminder.value--;
+    await widget.database.setReminder(reminder);
   }
 
-  void _delete(Counter counter) async {
-    await widget.database.deleteCounter(counter);
+  void _delete(Reminder reminder) async {
+    await widget.database.deleteReminder(reminder);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('setState'),
+        title: Text('Reminders'),
         elevation: 1.0,
       ),
       body: _buildContent(),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: _createCounter,
+        onPressed: _createReminder,
       ),
     );
   }
 
   Widget _buildContent() {
-    return ListItemsBuilder<Counter>(
-      items: _counters,
-      itemBuilder: (context, counter) {
-        return CounterListTile(
-          key: Key('counter-${counter.id}'),
-          counter: counter,
+    return ListItemsBuilder<Reminder>(
+      items: _reminders,
+      itemBuilder: (context, reminder) {
+        return ReminderListTile(
+          key: Key('counter-${reminder.id}'),
+          reminder: reminder,
           onDecrement: _decrement,
           onIncrement: _increment,
           onDismissed: _delete,

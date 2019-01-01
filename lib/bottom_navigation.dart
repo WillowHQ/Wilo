@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:redux/redux.dart';
-import 'package:flutter_redux/flutter_redux.dart';
-import 'package:scoped_model/scoped_model.dart';
 import 'package:flutter_app/database.dart';
-import 'package:flutter_app/pages/redux_page.dart';
-import 'package:flutter_app/pages/scoped_models_page.dart';
 import 'package:flutter_app/pages/set_state_page.dart';
-import 'package:flutter_app/pages/streams_page.dart';
 import 'package:flutter_app/pages/reminders_set_state_page.dart';
 
 
@@ -64,11 +58,12 @@ class BottomNavigationState extends State<BottomNavigation> {
   Widget _buildBody() {
     var database = AppFirestore();
     var stream = database.countersStream();
+    var remindersStream = database.remindersStream();
     switch (currentItem) {
       case TabItem.setState:
         return SetStatePage(database: database, stream: stream);
       case TabItem.reminders:
-        return ReminderSetStatePage(database: database, stream: stream);
+        return ReminderSetStatePage(database: database, stream: remindersStream);
 
     }
     return Container();
