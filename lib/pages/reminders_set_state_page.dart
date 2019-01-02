@@ -6,9 +6,10 @@ import 'package:flutter_app/common_widgets/list_items_builder.dart';
 import 'package:flutter_app/database.dart';
 
 class ReminderSetStatePage extends StatefulWidget {
-  ReminderSetStatePage({this.database, this.stream});
+  ReminderSetStatePage({this.database, this.stream, this.handleNavChange});
   final Database database;
   final Stream<List<Reminder>> stream;
+  final handleNavChange;
 
   @override
   State<StatefulWidget> createState() => ReminderSetStatePageState();
@@ -38,7 +39,9 @@ class ReminderSetStatePageState extends State<ReminderSetStatePage> {
   void _createReminder() async {
     await widget.database.createReminder();
   }
-
+  void _nav(Reminder reminder) {
+    widget.handleNavChange(widget.database, reminder);
+  }
   void _increment(Reminder reminder) async {
     reminder.value++;
     await widget.database.setReminder(reminder);
@@ -82,6 +85,7 @@ class ReminderSetStatePageState extends State<ReminderSetStatePage> {
           onDecrement: _decrement,
           onIncrement: _increment,
           onDismissed: _delete,
+          onNav: _nav,
         );
       },
     );

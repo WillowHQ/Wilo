@@ -23,6 +23,7 @@ abstract class Database {
   Future<void> createReminder();
   Future<void> setReminder(Reminder reminder);
   Future<void> deleteReminder(Reminder reminder);
+  Future<void> updateReminder(Reminder reminder, String prompt);
   Stream<List<Reminder>> remindersStream();
 }
 
@@ -57,6 +58,7 @@ class AppFirestore implements Database {
   DocumentReference _documentReference(Counter counter) {
     return Firestore.instance.collection(rootPath).document('${counter.id}');
   }
+ 
 
   static final String rootPath = 'counters';
 
@@ -78,6 +80,7 @@ class AppFirestore implements Database {
     _documentReminderReference(reminder).delete();
   }
   Future<void> updateReminder(Reminder reminder, String prompt) async {
+    print("this got called database.data l 82");
     _documentReminderReference(reminder).setData({
       'prompt': prompt
     });

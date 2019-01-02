@@ -3,13 +3,14 @@ import 'package:flutter_app/database.dart';
 
 class ReminderListTile extends StatefulWidget {
   ReminderListTile(
-      {this.key, this.reminder, this.onDecrement, this.onIncrement, this.onDismissed});
+      {this.key, this.reminder, this.onDecrement, this.onIncrement, this.onDismissed, this.onNav});
 
   final Key key;
   final Reminder reminder;
   final ValueChanged<Reminder> onDecrement;
   final ValueChanged<Reminder> onIncrement;
   final ValueChanged<Reminder> onDismissed;
+  final onNav;
 
 
   @override
@@ -34,9 +35,8 @@ class _ReminderTileState extends State<ReminderListTile> {
       child: ListTile(
 
         title: Text(
-          'Steve',
+          'Phil',
           style: TextStyle(fontSize: 16.0),
-
         ),
         subtitle: Text(
           'Phil',
@@ -52,7 +52,7 @@ class _ReminderTileState extends State<ReminderListTile> {
             SizedBox(width: 8.0),
             ReminderActionButton(
               iconData: Icons.add,
-              onPressed: () => widget.onIncrement(widget.reminder),
+              onPressed: () => widget.onNav(widget.reminder),
             ),
           ],
         ),

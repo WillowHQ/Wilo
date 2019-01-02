@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/database.dart';
 import 'package:flutter_app/pages/set_state_page.dart';
 import 'package:flutter_app/pages/reminders_set_state_page.dart';
+import 'package:flutter_app/pages/reminder_detail_form.dart';
+
 
 
 enum TabItem {
@@ -40,6 +42,12 @@ class BottomNavigationState extends State<BottomNavigation> {
 
     }
   }
+  _navToNewPage(Database database, Reminder reminder) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ReminderDetailForm(database: database, reminder: reminder)),
+    );
+  }
 
   _updateCurrentItem(TabItem item) {
     setState(() {
@@ -63,7 +71,7 @@ class BottomNavigationState extends State<BottomNavigation> {
       case TabItem.setState:
         return SetStatePage(database: database, stream: stream);
       case TabItem.reminders:
-        return ReminderSetStatePage(database: database, stream: remindersStream);
+        return ReminderSetStatePage(database: database, stream: remindersStream, handleNavChange: _navToNewPage);
 
     }
     return Container();
@@ -100,5 +108,27 @@ class BottomNavigationState extends State<BottomNavigation> {
 
   Color _colorTabMatching({TabItem item}) {
     return currentItem == item ? Theme.of(context).primaryColor : Colors.grey;
+  }
+}
+
+class SecondScreen extends StatelessWidget {
+  SecondScreen({this.reminder});
+  final Reminder reminder;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('${reminder.id}'),
+      ),
+      body: Center(
+        child: RaisedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text('Go back!'),
+        ),
+      ),
+    );
   }
 }
