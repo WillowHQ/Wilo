@@ -79,6 +79,9 @@ class ReminderSetStatePageState extends State<ReminderSetStatePage> {
     return ListItemsBuilder<Reminder>(
       items: _reminders,
       itemBuilder: (context, reminder) {
+
+        print(reminder.prompt.toString());
+        print(reminder.value.toString());
         return ReminderListTile(
           key: Key('counter-${reminder.id}'),
           reminder: reminder,

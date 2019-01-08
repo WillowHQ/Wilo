@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Counter {
@@ -8,7 +9,7 @@ class Counter {
   int value;
 }
 class Reminder {
-  Reminder({this.id, this.value});
+  Reminder({this.id, this.value, @required this.prompt});
   int id;
   int value;
   String prompt;
@@ -58,7 +59,7 @@ class AppFirestore implements Database {
   DocumentReference _documentReference(Counter counter) {
     return Firestore.instance.collection(rootPath).document('${counter.id}');
   }
- 
+
 
   static final String rootPath = 'counters';
 
@@ -70,9 +71,11 @@ class AppFirestore implements Database {
     await setReminder(reminder);
   }
   Future<void> setReminder(Reminder reminder) async {
+    print("is this getting called");
 
     _documentReminderReference(reminder).setData({
       'value' : reminder.value,
+      'prompt': reminder.prompt
     });
   }
 
@@ -81,11 +84,13 @@ class AppFirestore implements Database {
   }
   Future<void> updateReminder(Reminder reminder, String prompt) async {
     print("this got called database.data l 82");
-    _documentReminderReference(reminder).setData({
-      'prompt': prompt
-    });
-  }
 
+    print(prompt.toString());
+    print(reminder.value.toString());
+
+
+    _documentReminderReference(reminder).updateData(<String, dynamic>{'prompt': prompt, 'value': reminder.value});
+  }
   Stream<List<Reminder>> remindersStream() {
     return _FirestoreStream<List<Reminder>>(
       apiPath: reminderPath,
@@ -123,6 +128,7 @@ class FirestoreRemindersParser extends FirestoreNodeParser<List<Reminder>> {
       return Reminder(
         id: int.parse(documentSnapshot.documentID),
         value: documentSnapshot['value'],
+        prompt: documentSnapshot['prompt'],
       );
     }).toList();
     reminders.sort((lhs, rhs) => rhs.id.compareTo(lhs.id));

@@ -35,11 +35,11 @@ class _ReminderTileState extends State<ReminderListTile> {
       child: ListTile(
 
         title: Text(
-          'Phil',
+          widget.reminder.prompt != null ? widget.reminder.prompt.toString() : "Empty",
           style: TextStyle(fontSize: 16.0),
         ),
         subtitle: Text(
-          'Phil',
+          widget.reminder.value != null ? widget.reminder.value.toString() : "Empty",
           style: TextStyle(fontSize: 16.0),
         ),
         trailing: Row(
