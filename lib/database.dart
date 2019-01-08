@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Counter {
@@ -7,79 +8,27 @@ class Counter {
   int id;
   int value;
 }
+class Reminder {
+  Reminder({this.id, this.value, @required this.prompt});
+  int id;
+  int value;
+  String prompt;
+}
 
 abstract class Database {
   Future<void> createCounter();
   Future<void> setCounter(Counter counter);
   Future<void> deleteCounter(Counter counter);
   Stream<List<Counter>> countersStream();
+
+  Future<void> createReminder();
+  Future<void> setReminder(Reminder reminder);
+  Future<void> deleteReminder(Reminder reminder);
+  Future<void> updateReminder(Reminder reminder, String prompt);
+  Stream<List<Reminder>> remindersStream();
 }
 
-// Realtime Database
-class AppDatabase implements Database {
-  Future<void> createCounter() async {
-    int now = DateTime.now().millisecondsSinceEpoch;
-    Counter counter = Counter(id: now, value: 0);
-    await setCounter(counter);
-  }
 
-  Future<void> setCounter(Counter counter) async {
-    DatabaseReference databaseReference = _databaseReference(counter);
-    await databaseReference.set(counter.value);
-  }
-
-  Future<void> deleteCounter(Counter counter) async {
-    DatabaseReference databaseReference = _databaseReference(counter);
-    await databaseReference.remove();
-  }
-
-  DatabaseReference _databaseReference(Counter counter) {
-    var path = '$rootPath/${counter.id}';
-    return FirebaseDatabase.instance.reference().child(path);
-  }
-
-  Stream<List<Counter>> countersStream() {
-    return _DatabaseStream<List<Counter>>(
-      apiPath: rootPath,
-      parser: _DatabaseCountersParser(),
-    ).stream;
-  }
-
-  static final String rootPath = 'counters';
-}
-
-class _DatabaseStream<T> {
-  _DatabaseStream({String apiPath, DatabaseNodeParser<T> parser}) {
-    FirebaseDatabase firebaseDatabase = FirebaseDatabase.instance;
-    DatabaseReference databaseReference =
-    firebaseDatabase.reference().child(apiPath);
-    var eventStream = databaseReference.onValue;
-    stream = eventStream.map((event) => parser.parse(event));
-  }
-
-  Stream<T> stream;
-}
-
-abstract class DatabaseNodeParser<T> {
-  T parse(Event event);
-}
-
-class _DatabaseCountersParser implements DatabaseNodeParser<List<Counter>> {
-  List<Counter> parse(Event event) {
-    Map<dynamic, dynamic> values = event.snapshot.value;
-    if (values != null) {
-      Iterable<String> keys = values.keys.cast<String>();
-
-      var counters = keys
-          .map((key) => Counter(id: int.parse(key), value: values[key]))
-          .toList();
-      counters.sort((lhs, rhs) => rhs.id.compareTo(lhs.id));
-      return counters;
-    } else {
-      return [];
-    }
-  }
-}
 
 // Cloud Firestore
 class AppFirestore implements Database {
@@ -111,7 +60,49 @@ class AppFirestore implements Database {
     return Firestore.instance.collection(rootPath).document('${counter.id}');
   }
 
+
   static final String rootPath = 'counters';
+
+  //REMINDERS
+
+  Future<void> createReminder() async {
+    int now = DateTime.now().millisecondsSinceEpoch;
+    Reminder reminder = Reminder(id: now, value: 0);
+    await setReminder(reminder);
+  }
+  Future<void> setReminder(Reminder reminder) async {
+    print("is this getting called");
+
+    _documentReminderReference(reminder).setData({
+      'value' : reminder.value,
+      'prompt': reminder.prompt
+    });
+  }
+
+  Future<void> deleteReminder(Reminder reminder) async {
+    _documentReminderReference(reminder).delete();
+  }
+  Future<void> updateReminder(Reminder reminder, String prompt) async {
+    print("this got called database.data l 82");
+
+    print(prompt.toString());
+    print(reminder.value.toString());
+
+
+    _documentReminderReference(reminder).updateData(<String, dynamic>{'prompt': prompt, 'value': reminder.value});
+  }
+  Stream<List<Reminder>> remindersStream() {
+    return _FirestoreStream<List<Reminder>>(
+      apiPath: reminderPath,
+      parser: FirestoreRemindersParser(),
+    ).stream;
+  }
+
+  DocumentReference _documentReminderReference(Reminder reminder) {
+    return Firestore.instance.collection(reminderPath).document('${reminder.id}');
+  }
+
+  static final String reminderPath = 'reminders';
 }
 
 abstract class FirestoreNodeParser<T> {
@@ -129,6 +120,19 @@ class FirestoreCountersParser extends FirestoreNodeParser<List<Counter>> {
     }).toList();
     counters.sort((lhs, rhs) => rhs.id.compareTo(lhs.id));
     return counters;
+  }
+}
+class FirestoreRemindersParser extends FirestoreNodeParser<List<Reminder>> {
+  List<Reminder> parse(QuerySnapshot querySnapshot) {
+    var reminders = querySnapshot.documents.map((documentSnapshot) {
+      return Reminder(
+        id: int.parse(documentSnapshot.documentID),
+        value: documentSnapshot['value'],
+        prompt: documentSnapshot['prompt'],
+      );
+    }).toList();
+    reminders.sort((lhs, rhs) => rhs.id.compareTo(lhs.id));
+    return reminders;
   }
 }
 
