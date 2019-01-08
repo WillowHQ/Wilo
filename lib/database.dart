@@ -128,7 +128,7 @@ class FirestoreRemindersParser extends FirestoreNodeParser<List<Reminder>> {
       return Reminder(
         id: int.parse(documentSnapshot.documentID),
         value: documentSnapshot['value'],
-        prompt: documentSnapshot['prompt'],
+        prompt: documentSnapshot['prompt'].toString(),
       );
     }).toList();
     reminders.sort((lhs, rhs) => rhs.id.compareTo(lhs.id));
