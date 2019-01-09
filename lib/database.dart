@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -24,7 +23,7 @@ abstract class Database {
   Future<void> createReminder();
   Future<void> setReminder(Reminder reminder);
   Future<void> deleteReminder(Reminder reminder);
-  Future<void> updateReminder(Reminder reminder, String prompt);
+  Future<void> updateReminder(Reminder reminder, String outcome, String action, DateTime startTime, DateTime endtime, repeatFrequency);
   Stream<List<Reminder>> remindersStream();
 }
 
@@ -67,7 +66,7 @@ class AppFirestore implements Database {
 
   Future<void> createReminder() async {
     int now = DateTime.now().millisecondsSinceEpoch;
-    Reminder reminder = Reminder(id: now, value: 0);
+    Reminder reminder = Reminder(id: now, value: 0, prompt: 'duh');
     await setReminder(reminder);
   }
   Future<void> setReminder(Reminder reminder) async {
@@ -82,14 +81,14 @@ class AppFirestore implements Database {
   Future<void> deleteReminder(Reminder reminder) async {
     _documentReminderReference(reminder).delete();
   }
-  Future<void> updateReminder(Reminder reminder, String prompt) async {
-    print("this got called database.data l 82");
+  Future<void> updateReminder(Reminder reminder, String outcome, String action, DateTime startTime, DateTime endTime, repeatFrequency) async {
+//    print("this got called database.data l 82");
 
-    print(prompt.toString());
+    print(outcome.toString());
     print(reminder.value.toString());
 
 
-    _documentReminderReference(reminder).updateData(<String, dynamic>{'prompt': prompt, 'value': reminder.value});
+    _documentReminderReference(reminder).updateData(<String, dynamic>{'outcome': outcome, 'action': action, 'StartTime': startTime, 'EndTime': endTime, 'RepeatFrequency' : repeatFrequency});
   }
   Stream<List<Reminder>> remindersStream() {
     return _FirestoreStream<List<Reminder>>(

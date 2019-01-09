@@ -47,10 +47,7 @@ class ReminderSetStatePageState extends State<ReminderSetStatePage> {
     await widget.database.setReminder(reminder);
   }
 
-  void _updatePrompt(Reminder reminder, String prompt) async {
-    reminder.prompt = prompt;
-
-  }
+  
   void _decrement(Reminder reminder) async {
     reminder.value--;
     await widget.database.setReminder(reminder);

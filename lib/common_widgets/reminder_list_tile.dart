@@ -19,7 +19,6 @@ class ReminderListTile extends StatefulWidget {
 class _ReminderTileState extends State<ReminderListTile> {
   final reminderFormKey = GlobalKey<FormState>();
 
-  String _prompt;
 
   @override
 
